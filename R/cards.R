@@ -2,8 +2,8 @@
 #' Retrieve a card from the Scryfall API using the card's name.
 #'
 #' For both exact and fuzzy, card names are case-insensitive and punctuation is
-#' optional (you can drop apostrophes and periods etc). For example: fIReBALL is
-#' the same as Fireball and smugglers copter is the same as Smuggler's Copter.
+#' optional (you can drop apostrophes and periods etc). For example: "fIReBALL" is
+#' the same as "Fireball" and "smugglers copter" is the same as "Smuggler's Copter".
 #'
 #' @param name The card name to be searched for.
 #' @param fuzzy Whether to search for an exact match, or to use a fuzzy search.
@@ -95,6 +95,59 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
 
   unpack_card_response(card_content)
 }
+
+#' Search for cards based on scryfall's search syntax.
+#'
+#' Scryfall's API returns a maximum of 175 cards per page.
+#'
+#' @param q Query, using scryfall's syntax.
+#' @param unique Whether scryfall should remove possible duplicates in the results ("cards" (default), "art", "prints")
+#' @param order Method for how the returned cards should be sorted.
+#' @param dir The direction to sort cards.
+#' @param include_extras When TRUE, extra cards (e.g. tokens) will be included (default: FALSE).
+#' @param page Which page number to return; defaults to 1.
+#'
+#' @return A tibble containing card information.
+#'
+#' Scryfall's search syntax reference can be [found here.](https://scryfall.com/docs/syntax) Below is further information on different options that can be specified for the function arguments.
+#'
+#' _**`unique`**_
+#'
+#' Further information on `unique`, from scryfall's documentation:
+#'
+#' > - *cards* (default) Removes duplicate gameplay objects (cards that share a name and have the same functionality). For example, if your search matches more than one print of Pacifism, only one copy of Pacifism will be returned.
+#' > - *art* Returns only one copy of each unique artwork for matching cards. For example, if your search matches more than one print of Pacifism, one card with each different illustration for Pacifism will be returned, but any cards that duplicate artwork already in the results will be omitted.
+#' > - *prints* Returns all prints for all cards matched (disables rollup). For example, if your search matches more than one print of Pacifism, all matching prints will be returned.
+#'
+#' _**`order`**_
+#'
+#' Further information on `order`, from scryfall's documentation:
+#'
+#' - *name* (default) Sort cards by name, A → Z
+#' - *set* Sort cards by their set and collector number: AAA/#1 → ZZZ/#999
+#' - *released* Sort cards by their release date: Newest → Oldest
+#' - *rarity* Sort cards by their rarity: Common → Mythic
+#' - *color* Sort cards by their color and color identity: WUBRG → multicolor → colorless
+#' - *usd* Sort cards by their lowest known U.S. Dollar price: 0.01 → highest, null last
+#' - *tix* Sort cards by their lowest known TIX price: 0.01 → highest, null last
+#' - *eur* Sort cards by their lowest known Euro price: 0.01 → highest, null last
+#' - *cmc* Sort cards by their converted mana cost: 0 → highest
+#' - *power* Sort cards by their power: null → highest
+#' - *toughness* Sort cards by their toughness: null → highest
+#' - *edhrec* Sort cards by their EDHREC ranking: lowest → highest
+#' - *artist* Sort cards by their front-side artist name: A → Z
+#'
+#' _**`dir`**_
+#'
+#' - *auto* (default) Scryfall will automatically choose the most inuitive direction to sort
+#' - *asc* Sort ascending (the direction of the arrows in the previous table)
+#' - *desc* Sort descending (flip the direction of the arrows in the previous table)
+#'
+#' @export
+search_cards <- function(q, unique, order, dir, include_extras = FALSE, page = 1) {
+  NULL
+}
+
 
 # FIXME: need to figure out a clean way to ensure that all the IDs are returned
 # even if they're null

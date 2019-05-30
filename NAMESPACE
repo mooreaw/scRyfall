@@ -2,6 +2,7 @@
 
 export(get_card_by_id)
 export(get_card_by_name)
+export(search_cards)
 import(dplyr)
 import(httr)
 import(purrr)

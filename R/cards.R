@@ -144,8 +144,45 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
 #' - *desc* Sort descending (flip the direction of the arrows in the previous table)
 #'
 #' @export
-search_cards <- function(q, unique, order, dir, include_extras = FALSE, page = 1) {
-  NULL
+search_cards <- function(q, unique = "cards", order = "name", dir = "auto", include_extras = FALSE, page = 1) {
+  base_url <- "https://api.scryfall.com/cards/search/"
+
+  q <- utils::URLencode(q, reserved = TRUE)
+
+  url <- str_glue("{base_url}?order={order}&unique={unique}&dir={dir}&q={q}")
+
+  req <- GET(url)
+
+  stop_if(status_code(req), ~. != 200, msg = "Bad request")
+
+  res0 <- content(req)
+
+  # handle instances where the query returns more than 175 cards
+  if (res0$has_more) {
+    cards <- unpack_card_response(res0$data)
+
+    res_old <- res0
+    more    <- TRUE
+
+    while (more) {
+      req_new <- GET(res_old$next_page)
+
+      stop_if(status_code(req_new), ~. != 200, msg = "Paging failed...")
+
+      res_new <- content(req_new)
+      cards   <- bind_rows(cards, unpack_card_response(res_new$data))
+
+      if (res_new$has_more) {
+        res_old <- res_new
+      } else {
+        more <- FALSE
+      }
+    }
+
+    cards
+  } else {
+    unpack_card_response(res0$data)
+  }
 }
 
 
@@ -177,6 +214,7 @@ unpack_card_response <- function(card_content) {
     type             = map_chr(card_content, "type_line"),
     text             = map_chr(card_content, "oracle_text"),
     colors           = map(card_content, "colors"),
-    color_identity   = map(card_content, "color_identity")
+    color_identity   = map(card_content, "color_identity"),
+    images           = map(card_content, "image_uris")
   )
 }

@@ -1,14 +1,15 @@
 Package: scRyfall
-Title: What the Package Does (One Line, Title Case)
+Title: R Wrapper for the Scryfall API
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Andrew",
+           family = "Moore",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "moore.andrew09@gmail.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+Description: scRyfall provides a set of functions that can query Scryfall's API.
+    Cards can be fetched via Scryfall's search syntax, or by name.
+License: MIT
 Encoding: UTF-8
 LazyData: true
 Imports: 

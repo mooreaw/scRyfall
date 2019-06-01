@@ -185,10 +185,6 @@ search_cards <- function(q, unique = "cards", order = "name", dir = "auto", incl
   }
 }
 
-
-# FIXME: need to figure out a clean way to ensure that all the IDs are returned
-# even if they're null
-
 #' Return card API results as a data frame.
 #'
 #' @param card_content List of card information to be converted into a tibble.
@@ -212,6 +208,7 @@ unpack_card_response <- function(card_content) {
     set_name         = map_chr(card_content, "set_name"),
     cmc              = map_dbl(card_content, "cmc"),
     type             = map_chr(card_content, "type_line"),
+    rarity           = map_chr(card_content, "rarity"),
     text             = map_chr(card_content, "oracle_text"),
     colors           = map(card_content, "colors"),
     color_identity   = map(card_content, "color_identity"),

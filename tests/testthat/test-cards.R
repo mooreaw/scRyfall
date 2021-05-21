@@ -48,3 +48,6 @@ test_that("Cards missing arena or MTGO IDs get NA in their columns.", {
   skip("Not implemented.")
 })
 
+test_that("Double-faced cards are handled sensibly.", {
+  get_card_by_name("Delver of Secrets")
+})

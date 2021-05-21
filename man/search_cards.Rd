@@ -4,7 +4,14 @@
 \alias{search_cards}
 \title{Search for cards based on scryfall's search syntax.}
 \usage{
-search_cards(q)
+search_cards(
+  q,
+  unique = "cards",
+  order = "name",
+  dir = "auto",
+  include_extras = FALSE,
+  page = 1
+)
 }
 \arguments{
 \item{q}{Query, using scryfall's syntax.}
@@ -15,7 +22,7 @@ search_cards(q)
 
 \item{dir}{The direction to sort cards.}
 
-\item{include_extras}{When TRUE, extra cards (e.g. tokens) will be included.}
+\item{include_extras}{When TRUE, extra cards (e.g. tokens) will be included (default: FALSE).}
 
 \item{page}{Which page number to return; defaults to 1.}
 }
@@ -26,18 +33,13 @@ Scryfall's search syntax reference can be \href{https://scryfall.com/docs/syntax
 
 \emph{\strong{\code{unique}}}
 
-Further information on \code{unique}, from scryfall's documentation:
-\itemize{
-\item \emph{cards} Removes duplicate gameplay objects (cards that share a name and have the same functionality). For example, if your search matches more than one print of Pacifism, only one copy of Pacifism will be returned.
-\item \emph{art} Returns only one copy of each unique artwork for matching cards. For example, if your search matches more than one print of Pacifism, one card with each different illustration for Pacifism will be returned, but any cards that duplicate artwork already in the results will be omitted.
-\item \emph{prints} Returns all prints for all cards matched (disables rollup). For example, if your search matches more than one print of Pacifism, all matching prints will be returned.
-}
+Further information on \code{unique}, from scryfall's documentation:cards (default) Removes duplicate gameplay objects (cards that share a name and have the same functionality). For example, if your search matches more than one print of Pacifism, only one copy of Pacifism will be returned.art Returns only one copy of each unique artwork for matching cards. For example, if your search matches more than one print of Pacifism, one card with each different illustration for Pacifism will be returned, but any cards that duplicate artwork already in the results will be omitted.prints Returns all prints for all cards matched (disables rollup). For example, if your search matches more than one print of Pacifism, all matching prints will be returned.
 
 \emph{\strong{\code{order}}}
 
 Further information on \code{order}, from scryfall's documentation:
 \itemize{
-\item \emph{name} Sort cards by name, A → Z
+\item \emph{name} (default) Sort cards by name, A → Z
 \item \emph{set} Sort cards by their set and collector number: AAA/#1 → ZZZ/#999
 \item \emph{released} Sort cards by their release date: Newest → Oldest
 \item \emph{rarity} Sort cards by their rarity: Common → Mythic
@@ -54,11 +56,11 @@ Further information on \code{order}, from scryfall's documentation:
 
 \emph{\strong{\code{dir}}}
 \itemize{
-\item \emph{auto} Scryfall will automatically choose the most inuitive direction to sort
+\item \emph{auto} (default) Scryfall will automatically choose the most inuitive direction to sort
 \item \emph{asc} Sort ascending (the direction of the arrows in the previous table)
 \item \emph{desc} Sort descending (flip the direction of the arrows in the previous table)
 }
 }
 \description{
-Search for cards based on scryfall's search syntax.
+Scryfall's API returns a maximum of 175 cards per page.
 }

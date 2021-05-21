@@ -18,6 +18,6 @@ A tibble containing card information.
 }
 \description{
 For both exact and fuzzy, card names are case-insensitive and punctuation is
-optional (you can drop apostrophes and periods etc). For example: fIReBALL is
-the same as Fireball and smugglers copter is the same as Smuggler's Copter.
+optional (you can drop apostrophes and periods etc). For example: "fIReBALL" is
+the same as "Fireball" and "smugglers copter" is the same as "Smuggler's Copter".
 }

@@ -4,8 +4,14 @@
 \alias{get_card_by_id}
 \title{Retrieve a card from the Scryfall API using the card's ID.}
 \usage{
-get_card_by_id(id, type = "scryfall", format = NULL, face = NULL,
-  version = NULL, set = NULL)
+get_card_by_id(
+  id,
+  type = "scryfall",
+  format = NULL,
+  face = NULL,
+  version = NULL,
+  set = NULL
+)
 }
 \arguments{
 \item{id}{ID value(s) to search for.}

@@ -153,6 +153,7 @@ search_cards <- function(q, unique = "cards", order = "name", dir = "auto", incl
 
   req <- GET(url)
 
+  # TODO: this error message is unhelpful, come up with something better
   stop_if(status_code(req), ~. != 200, msg = "Bad request")
 
   res0 <- content(req)
@@ -172,6 +173,7 @@ search_cards <- function(q, unique = "cards", order = "name", dir = "auto", incl
       res_new <- content(req_new)
       cards   <- bind_rows(cards, unpack_card_response(res_new$data))
 
+      # after unpacking, check to see if there are more results
       if (res_new$has_more) {
         res_old <- res_new
       } else {
@@ -197,8 +199,8 @@ unpack_card_response <- function(card_content) {
   tibble(
     name             = map_chr(card_content, "name"),
     scryfall_id      = map_chr(card_content, "id"),
-    oracle_id        = map_chr(card_content, "oracle_id"),
-    multiverse_ids   = map(card_content, "multiverse_ids"),
+    # oracle_id        = map_chr(card_content, "oracle_id"),
+    # multiverse_ids   = map(card_content, "multiverse_ids"),
     # arena_id         = map_chr(card_content, "arena_id"),
     # mtgo_id          = map_chr(card_content, "mtgo_id"),
     # mtgo_foil_id     = map_chr(card_content, "mtgo_foil_id"),
@@ -212,6 +214,6 @@ unpack_card_response <- function(card_content) {
     text             = map_chr(card_content, "oracle_text"),
     colors           = map(card_content, "colors"),
     color_identity   = map(card_content, "color_identity"),
-    images           = map(card_content, "image_uris")
+    # images           = map(card_content, "image_uris")
   )
 }

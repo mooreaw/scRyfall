@@ -151,39 +151,38 @@ search_cards <- function(q, unique = "cards", order = "name", dir = "auto", incl
 
   url <- str_glue("{base_url}?order={order}&unique={unique}&dir={dir}&q={q}")
 
+  Sys.sleep(1)
   req <- GET(url)
 
   # TODO: this error message is unhelpful, come up with something better
   stop_if(status_code(req), ~. != 200, msg = "Bad request")
 
   res0 <- content(req)
+  more <- res0$has_more
 
   # handle instances where the query returns more than 175 cards
-  if (res0$has_more) {
-    cards <- unpack_card_response(res0$data)
-
-    res_old <- res0
-    more    <- TRUE
+  if (more) {
+    cards <- unpack_card_response(res0)
+    res_l <- res0
 
     while (more) {
-      req_new <- GET(res_old$next_page)
+      Sys.sleep(1)
+
+      req_new <- GET(res_l$next_page)
 
       stop_if(status_code(req_new), ~. != 200, msg = "Paging failed...")
 
-      res_new <- content(req_new)
-      cards   <- bind_rows(cards, unpack_card_response(res_new$data))
+      res_n <- content(req_new)
+      cards <- bind_rows(cards, unpack_card_response(res_n))
 
-      # after unpacking, check to see if there are more results
-      if (res_new$has_more) {
-        res_old <- res_new
-      } else {
-        more <- FALSE
-      }
+      more <- res_n$has_more
+
+      if (more) res_l <- res_n
     }
 
     cards
   } else {
-    unpack_card_response(res0$data)
+    unpack_card_response(res0)
   }
 }
 
@@ -195,25 +194,17 @@ search_cards <- function(q, unique = "cards", order = "name", dir = "auto", incl
 #'
 #' @import dplyr
 #' @import tibble
-unpack_card_response <- function(card_content) {
+unpack_card_response <- function(response) {
+  card_content <- response$data
+
   tibble(
     name             = map_chr(card_content, "name"),
     scryfall_id      = map_chr(card_content, "id"),
-    # oracle_id        = map_chr(card_content, "oracle_id"),
-    # multiverse_ids   = map(card_content, "multiverse_ids"),
-    # arena_id         = map_chr(card_content, "arena_id"),
-    # mtgo_id          = map_chr(card_content, "mtgo_id"),
-    # mtgo_foil_id     = map_chr(card_content, "mtgo_foil_id"),
-    collector_number = map_chr(card_content, "collector_number"),
-    mana_cost        = map_chr(card_content, "mana_cost"),
     set              = map_chr(card_content, "set"),
     set_name         = map_chr(card_content, "set_name"),
     cmc              = map_dbl(card_content, "cmc"),
     type             = map_chr(card_content, "type_line"),
     rarity           = map_chr(card_content, "rarity"),
-    text             = map_chr(card_content, "oracle_text"),
-    colors           = map(card_content, "colors"),
-    color_identity   = map(card_content, "color_identity"),
-    # images           = map(card_content, "image_uris")
+    colors           = map(card_content, "colors")
   )
 }

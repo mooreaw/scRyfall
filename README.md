@@ -4,6 +4,8 @@ Scryfall is an R-wrapper for the *Scryfall* API.
 
 A link to Scryfall's API documentation [is here.](https://scryfall.com/docs/api)
 
+A link to Scryfall's syntax guide [is here.](https://scryfall.com/docs/syntax)
+
 ## Installation
 
 This package is very much a work-in-progress and many features are not implemented yet, but if you want to install the package to take a look at things locally, you can use:

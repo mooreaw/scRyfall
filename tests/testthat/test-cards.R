@@ -1,3 +1,14 @@
+test_that("All get_card_ functions return a tibble.", {
+  cc_name <- get_card_by_name("Cryptic Command")
+  cc_id   <- get_card_by_id("30f6fca9-003b-4f6b-9d6e-1e88adda4155")
+
+  expect_true(is_tibble(cc_name))
+  expect_true(is_tibble(cc_id))
+})
+
+test_that("The search_cards() function should return a tibble.", {
+  expect_true(is_tibble(search_cards("!Negate")))
+})
 
 test_that("fuzzy = TRUE should give the same results as non fuzzy, assuming the same card", {
   cc_name_1 <- get_card_by_name("ajanis pridemate", fuzzy = TRUE)
@@ -8,12 +19,12 @@ test_that("fuzzy = TRUE should give the same results as non fuzzy, assuming the 
   expect_equal(cc_name_1$set_name, cc_name_2$set_name)
 })
 
-test_that("All get_card_ functions return a tibble.", {
-  cc_name <- get_card_by_name("Cryptic Command")
-  cc_id   <- get_card_by_id("30f6fca9-003b-4f6b-9d6e-1e88adda4155")
+test_that("Searching for a frequently printed card, by name, should return at least 1 result.", {
+  n1 <- get_card_by_name("Negate")
+  n2 <- search_cards("!Negate")
 
-  expect_true(is_tibble(cc_name))
-  expect_true(is_tibble(cc_id))
+  expect_gt(nrow(n1), 0)
+  expect_gt(nrow(n2), 0)
 })
 
 test_that("Multiple cards can be searched at the same time.", {

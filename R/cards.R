@@ -41,7 +41,7 @@ get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {
   card_content <- map(
     url,
     function(link) {
-      Sys.sleep(.5) # UPDATE ME
+      Sys.sleep(1)
       res <- GET(link)
       check_status(res)
       content(res)
@@ -86,7 +86,7 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
   card_content <- map(
     url,
     function(link) {
-      Sys.sleep(.5) # UPDATE ME
+      Sys.sleep(1)
       res <- GET(link)
       check_status(res)
       content(res)

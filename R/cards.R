@@ -195,16 +195,19 @@ search_cards <- function(q, unique = "cards", order = "name", dir = "auto", incl
 #' @import dplyr
 #' @import tibble
 unpack_card_response <- function(response) {
-  card_content <- response$data
-
-  tibble(
-    name             = map_chr(card_content, "name"),
-    scryfall_id      = map_chr(card_content, "id"),
-    set              = map_chr(card_content, "set"),
-    set_name         = map_chr(card_content, "set_name"),
-    cmc              = map_dbl(card_content, "cmc"),
-    type             = map_chr(card_content, "type_line"),
-    rarity           = map_chr(card_content, "rarity"),
-    colors           = map(card_content, "colors")
-  )
+  response$data %>% {
+    tibble(
+      name           = map_chr(., "name"),
+      set            = map_chr(., "set"),
+      set_name       = map_chr(., "set_name"),
+      rarity         = map_chr(., "rarity"),
+      cmc            = map_dbl(., "cmc"),
+      layout         = map_chr(., "layout"),
+      color_identity = map(., "color_identity") %>% map(unlist), # list of vectors-- if dfc, all colors combined into single vec
+      type_line      = map_chr(., "type_line"),
+      card_faces     = map(., "card_faces"), # null for sfc
+      legalities     = map(., "legalities"),
+      scryfall_id    = map_chr(., "id")
+    )
+  }
 }

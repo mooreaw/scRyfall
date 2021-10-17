@@ -38,17 +38,14 @@ get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {
     url <- str_c(url, "&set=", set)
   }
 
-  card_content <- map(
-    url,
-    function(link) {
-      Sys.sleep(1)
-      res <- GET(link)
-      check_status(res)
-      content(res)
-    }
-  )
+  Sys.sleep(1)
+  req <- GET(url)
+  res <- content(req)
 
-  unpack_card_response(card_content)
+  tibble(i = 1) %>%
+    mutate(data = lst(res)) %>%
+    unnest_wider(data) %>%
+    select(-i)
 }
 
 #' Retrieve a card from the Scryfall API using the card's ID.
@@ -83,17 +80,14 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
     TRUE                 ~ str_c(base_url, "collector/", id, "/")
   )
 
-  card_content <- map(
-    url,
-    function(link) {
-      Sys.sleep(1)
-      res <- GET(link)
-      check_status(res)
-      content(res)
-    }
-  )
+  Sys.sleep(1)
+  req <- GET(url)
+  res <- content(req)
 
-  unpack_card_response(card_content)
+  tibble(i = 1) %>%
+    mutate(data = lst(res)) %>%
+    unnest_wider(data) %>%
+    select(-i)
 }
 
 #' Search for cards based on scryfall's search syntax.

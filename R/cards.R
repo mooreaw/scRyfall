@@ -147,9 +147,8 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
 search_cards <- function(q, unique = "cards", order = "name", dir = "auto", include_extras = FALSE, page = 1) {
   base_url <- "https://api.scryfall.com/cards/search/"
 
-  q <- utils::URLencode(q, reserved = TRUE)
-
-  url <- str_glue("{base_url}?order={order}&unique={unique}&dir={dir}&q={q}")
+  qry <- utils::URLencode(q, reserved = TRUE)
+  url <- str_glue("{base_url}?order={order}&unique={unique}&dir={dir}&q={qry}")
 
   Sys.sleep(1)
   req <- GET(url)
@@ -188,26 +187,14 @@ search_cards <- function(q, unique = "cards", order = "name", dir = "auto", incl
 
 #' Return card API results as a data frame.
 #'
-#' @param card_content List of card information to be converted into a tibble.
+#' @param req Response object, containing a list of card information to be converted into a tibble.
 #'
 #' @return A tibble with unpacked card information.
 #'
 #' @import dplyr
 #' @import tibble
-unpack_card_response <- function(response) {
-  response$data %>% {
-    tibble(
-      name           = map_chr(., "name"),
-      set            = map_chr(., "set"),
-      set_name       = map_chr(., "set_name"),
-      rarity         = map_chr(., "rarity"),
-      cmc            = map_dbl(., "cmc"),
-      layout         = map_chr(., "layout"),
-      color_identity = map(., "color_identity") %>% map(unlist), # list of vectors-- if dfc, all colors combined into single vec
-      type_line      = map_chr(., "type_line"),
-      card_faces     = map(., "card_faces"), # null for sfc
-      legalities     = map(., "legalities"),
-      scryfall_id    = map_chr(., "id")
-    )
-  }
+unpack_card_response <- function(req) {
+  as_tibble(req) %>%
+    select(data) %>%
+    unnest_wider(data)
 }

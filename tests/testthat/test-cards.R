@@ -47,18 +47,6 @@ test_that("get_card_by_id() will fail if the number of id types isn't equal to t
   expect_error(get_card_by_id(id_cards, types))
 })
 
-test_that("When using the set argument, get_card_by_name() fails if you don't provide a set for each card.", {
-  # assuming you're looking up cards from different sets, each card needs to get
-  # a unique value for its set
-  nm_cards <- c("Negate", "Ajani's Pridemate", "Shock")
-  sets <- c("xln", "m19")
-
-  expect_error(get_card_by_name(nm_cards, set = sets))
-
-  # but, you can recycle a set over a list of cards you know are in the same set
-  # expect_success(get_card_by_name(nm_cards, set = "m19"))
-})
-
 # TODO
 test_that("Cards missing arena or MTGO IDs get NA in their columns.", {
   skip("Not implemented.")

@@ -53,5 +53,15 @@ test_that("Cards missing arena or MTGO IDs get NA in their columns.", {
 })
 
 test_that("Double-faced cards are handled sensibly.", {
-  get_card_by_name("Delver of Secrets")
+  res1 <- get_card_by_name("Delver of Secrets")
+  res2 <- get_card_by_name("Insectile Abberation")
+
+  # you can search for either side, but it should return the DFC
+  expect_equal(res$name, res2$name)
+
+  # it's a DFC, so we shouldn't have this column in the results-- it should be nested in card_faces
+  expect_null(res1$power)
+
+  # the card_faces column shouldn't be empty
+  expect_false(is.null(res1$card_faces))
 })

@@ -38,17 +38,14 @@ get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {
     url <- str_c(url, "&set=", set)
   }
 
-  card_content <- map(
-    url,
-    function(link) {
-      Sys.sleep(1)
-      res <- GET(link)
-      check_status(res)
-      content(res)
-    }
-  )
+  Sys.sleep(1)
+  req <- GET(url)
+  res <- content(req)
 
-  unpack_card_response(card_content)
+  tibble(i = 1) %>%
+    mutate(data = lst(res)) %>%
+    unnest_wider(data) %>%
+    select(-i)
 }
 
 #' Retrieve a card from the Scryfall API using the card's ID.
@@ -83,17 +80,14 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
     TRUE                 ~ str_c(base_url, "collector/", id, "/")
   )
 
-  card_content <- map(
-    url,
-    function(link) {
-      Sys.sleep(1)
-      res <- GET(link)
-      check_status(res)
-      content(res)
-    }
-  )
+  Sys.sleep(1)
+  req <- GET(url)
+  res <- content(req)
 
-  unpack_card_response(card_content)
+  tibble(i = 1) %>%
+    mutate(data = lst(res)) %>%
+    unnest_wider(data) %>%
+    select(-i)
 }
 
 #' Search for cards based on scryfall's search syntax.
@@ -147,9 +141,8 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
 search_cards <- function(q, unique = "cards", order = "name", dir = "auto", include_extras = FALSE, page = 1) {
   base_url <- "https://api.scryfall.com/cards/search/"
 
-  q <- utils::URLencode(q, reserved = TRUE)
-
-  url <- str_glue("{base_url}?order={order}&unique={unique}&dir={dir}&q={q}")
+  qry <- utils::URLencode(q, reserved = TRUE)
+  url <- str_glue("{base_url}?order={order}&unique={unique}&dir={dir}&q={qry}")
 
   Sys.sleep(1)
   req <- GET(url)
@@ -188,23 +181,14 @@ search_cards <- function(q, unique = "cards", order = "name", dir = "auto", incl
 
 #' Return card API results as a data frame.
 #'
-#' @param card_content List of card information to be converted into a tibble.
+#' @param req Response object, containing a list of card information to be converted into a tibble.
 #'
 #' @return A tibble with unpacked card information.
 #'
 #' @import dplyr
 #' @import tibble
-unpack_card_response <- function(response) {
-  card_content <- response$data
-
-  tibble(
-    name             = map_chr(card_content, "name"),
-    scryfall_id      = map_chr(card_content, "id"),
-    set              = map_chr(card_content, "set"),
-    set_name         = map_chr(card_content, "set_name"),
-    cmc              = map_dbl(card_content, "cmc"),
-    type             = map_chr(card_content, "type_line"),
-    rarity           = map_chr(card_content, "rarity"),
-    colors           = map(card_content, "colors")
-  )
+unpack_card_response <- function(req) {
+  as_tibble(req) %>%
+    select(data) %>%
+    unnest_wider(data)
 }

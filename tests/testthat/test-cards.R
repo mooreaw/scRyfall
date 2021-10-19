@@ -57,7 +57,7 @@ test_that("Double-faced cards are handled sensibly.", {
   res2 <- get_card_by_name("Insectile Abberation")
 
   # you can search for either side, but it should return the DFC
-  expect_equal(res$name, res2$name)
+  expect_equal(res1$name, res2$name)
 
   # it's a DFC, so we shouldn't have this column in the results-- it should be nested in card_faces
   expect_null(res1$power)

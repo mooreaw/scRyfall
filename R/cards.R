@@ -20,23 +20,27 @@
 #' @export
 get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {
   stop_if(name, is.null, msg = "A name must be supplied in order to request card data.")
-  stop_if_not(name, is.character, msg = "Please provide a string.")
+  stop_if_not(name, is.character, msg = "Names must be strings.")
 
-  name <- name %>%
+  warn_if(name, ~length(.) > 1, msg = "length(name) is greater than 1; only the first value will be used.")
+  warn_if(fuzzy, ~length(.) > 1, msg = "length(fuzzy) is greater than 1; only the first value will be used.")
+  warn_if(set, ~length(.) > 1, msg = "length(set) is greater than 1; only the first value will be used.")
+
+  name <- first(name) %>%
     str_remove_all("[[:punct:]]") %>%
     str_squish() %>%
     str_replace_all(" ", "+")
 
   base_url <- "https://api.scryfall.com/cards/named?"
 
-  if (fuzzy) {
+  if (first(fuzzy)) {
     url <- str_c(base_url, "fuzzy=", name)
   } else {
     url <- str_c(base_url, "exact=", name)
   }
 
-  if (!is.null(set)) {
-    url <- str_c(url, "&set=", set)
+  if (!is.null(first(set))) {
+    url <- str_c(url, "&set=", first(set))
   }
 
   Sys.sleep(1)

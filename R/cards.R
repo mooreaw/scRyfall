@@ -12,6 +12,7 @@
 #' @return A tibble containing card information.
 #'
 #' @importFrom attempt stop_if stop_if_not stop_if_any
+#' @importFrom attempt warn_if warn_if_not warn_if_any
 #' @import httr
 #' @import stringr
 #' @import purrr

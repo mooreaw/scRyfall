@@ -27,11 +27,16 @@ test_that("Searching for a frequently printed card, by name, should return at le
   expect_gt(nrow(n2), 0)
 })
 
-test_that("Multiple cards can be searched at the same time.", {
+test_that("get_card_by_name() returns only one card at a time.", {
   nm_cards <- c("Ajani's Pridemate", "Elspeth, Knight Errant")
-  id_cards <- c()
 
-  expect_equal(nrow(get_card_by_name(nm_cards)), 2L)
+  res <- get_card_by_name(nm_cards)
+
+  # only one card should be returned
+  expect_equal(nrow(res), 1L)
+
+  # the card returned should be the first supplied
+  expect_equal(res$name, "Ajani's Pridemate")
 })
 
 test_that("get_card_by_id() will fail if the number of id types isn't equal to the number of cards.", {

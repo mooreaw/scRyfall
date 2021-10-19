@@ -33,7 +33,12 @@ Scryfall's search syntax reference can be \href{https://scryfall.com/docs/syntax
 
 \emph{\strong{\code{unique}}}
 
-Further information on \code{unique}, from scryfall's documentation:cards (default) Removes duplicate gameplay objects (cards that share a name and have the same functionality). For example, if your search matches more than one print of Pacifism, only one copy of Pacifism will be returned.art Returns only one copy of each unique artwork for matching cards. For example, if your search matches more than one print of Pacifism, one card with each different illustration for Pacifism will be returned, but any cards that duplicate artwork already in the results will be omitted.prints Returns all prints for all cards matched (disables rollup). For example, if your search matches more than one print of Pacifism, all matching prints will be returned.
+Further information on \code{unique}, from scryfall's documentation:
+\itemize{
+\item \emph{cards} (default) Removes duplicate gameplay objects (cards that share a name and have the same functionality). For example, if your search matches more than one print of Pacifism, only one copy of Pacifism will be returned.
+\item \emph{art} Returns only one copy of each unique artwork for matching cards. For example, if your search matches more than one print of Pacifism, one card with each different illustration for Pacifism will be returned, but any cards that duplicate artwork already in the results will be omitted.
+\item \emph{prints} Returns all prints for all cards matched (disables rollup). For example, if your search matches more than one print of Pacifism, all matching prints will be returned.
+}
 
 \emph{\strong{\code{order}}}
 

@@ -15,6 +15,7 @@
 #' @import httr
 #' @import stringr
 #' @import purrr
+#' @import tidyr
 #'
 #' @export
 get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {
@@ -109,9 +110,9 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
 #'
 #' Further information on `unique`, from scryfall's documentation:
 #'
-#' > - *cards* (default) Removes duplicate gameplay objects (cards that share a name and have the same functionality). For example, if your search matches more than one print of Pacifism, only one copy of Pacifism will be returned.
-#' > - *art* Returns only one copy of each unique artwork for matching cards. For example, if your search matches more than one print of Pacifism, one card with each different illustration for Pacifism will be returned, but any cards that duplicate artwork already in the results will be omitted.
-#' > - *prints* Returns all prints for all cards matched (disables rollup). For example, if your search matches more than one print of Pacifism, all matching prints will be returned.
+#' - *cards* (default) Removes duplicate gameplay objects (cards that share a name and have the same functionality). For example, if your search matches more than one print of Pacifism, only one copy of Pacifism will be returned.
+#' - *art* Returns only one copy of each unique artwork for matching cards. For example, if your search matches more than one print of Pacifism, one card with each different illustration for Pacifism will be returned, but any cards that duplicate artwork already in the results will be omitted.
+#' - *prints* Returns all prints for all cards matched (disables rollup). For example, if your search matches more than one print of Pacifism, all matching prints will be returned.
 #'
 #' _**`order`**_
 #'

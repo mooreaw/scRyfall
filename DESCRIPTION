@@ -19,6 +19,8 @@ Imports:
     attempt,
     purrr,
     dplyr,
+    tidyr,
+    tibble,
     stringr
 Suggests: 
     testthat (>= 2.1.0)

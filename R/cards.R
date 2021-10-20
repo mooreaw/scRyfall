@@ -17,6 +17,7 @@
 #' @import stringr
 #' @import purrr
 #' @import tidyr
+#' @import tibble
 #'
 #' @export
 get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {

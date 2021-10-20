@@ -3,6 +3,7 @@
 export(get_card_by_id)
 export(get_card_by_name)
 export(get_set_by_code)
+export(get_set_by_id)
 export(get_sets)
 export(search_cards)
 import(dplyr)

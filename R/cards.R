@@ -59,6 +59,7 @@ get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {
 #'
 #' @param id ID value(s) to search for.
 #' @param type Which ID type to use ("scryfall" (default), "mtgo", "arena", "collector", "multiverse").
+#' @param format Which format should be retrieved.
 #' @param face Which card face to return.
 #' @param version Which image version to return ("" (default), "small", "normal", "large").
 #' @param set Which set to request (Optional).

@@ -21,7 +21,8 @@ Imports:
     dplyr,
     tidyr,
     tibble,
-    stringr
+    stringr,
+    lifecycle
 Suggests: 
     testthat (>= 2.1.0)
 Roxygen: list(markdown = TRUE)

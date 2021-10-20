@@ -1,5 +1,7 @@
 # scRyfall
 
+[![R-CMD-check](https://github.com/ndrewwm/scRyfall/workflows/R-CMD-check/badge.svg)](https://github.com/ndrewwm/scRyfall/actions)
+
 Scryfall is an R-wrapper for the *Scryfall* API.
 
 A link to Scryfall's API documentation [is here.](https://scryfall.com/docs/api)

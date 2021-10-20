@@ -5,11 +5,11 @@ Authors@R:
     person(given = "Andrew",
            family = "Moore",
            role = c("aut", "cre"),
-           email = "moore.andrew09@gmail.com",
+           email = "hello@ndrewwm.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: scRyfall provides a set of functions that can query Scryfall's API.
     Cards can be fetched via Scryfall's search syntax, or by name.
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 

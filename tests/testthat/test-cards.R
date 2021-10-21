@@ -38,12 +38,17 @@ test_that("get_card_by_name() returns only one card at a time.", {
   expect_equal(res$name, "Ajani's Pridemate")
 })
 
-test_that("get_card_by_id() will fail if the number of id types isn't equal to the number of cards.", {
-  # 3 card IDs, 2 types
-  id_cards <- c("30f6fca9-003b-4f6b-9d6e-1e88adda4155", "70901356-3266-4bd9-aacc-f06c27271de5", "b3656310-093d-4724-a399-7f7010843b1f")
-  types <- c("scryfall", "scryfall")
+test_that("Querying each ID type should succeed, and should return the same card name.", {
+  ids <- c("e92c7477-d453-4fa4-acf4-3835ab9eb55a", "83095", "73262", "491701")
+  types <- c("scryfall", "mtgo", "arena", "multiverse")
+  out <- c()
 
-  expect_error(get_card_by_id(id_cards, types))
+  for (i in 1:4) {
+    res <- suppressWarnings(get_card_by_id(ids[i], types[i]))
+    out <- c(out, out$name)
+  }
+
+  expect_true(all(out == "Negate"))
 })
 
 # TODO

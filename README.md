@@ -3,53 +3,56 @@
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![R-CMD-check](https://github.com/ndrewwm/scRyfall/workflows/R-CMD-check/badge.svg)](https://github.com/ndrewwm/scRyfall/actions)
 
-Scryfall is an R-wrapper for the *Scryfall* API.
+`scRyfall` is an R-wrapper for the *Scryfall* API.
 
-A link to Scryfall's API documentation [is here.](https://scryfall.com/docs/api)
-
-A link to Scryfall's syntax guide [is here.](https://scryfall.com/docs/syntax)
+[Scryfall's API documentation](https://scryfall.com/docs/api) [Scryfall's syntax guide](https://scryfall.com/docs/syntax)
 
 ## Installation
 
-This package is very much a work-in-progress and many features are not implemented yet, but if you want to install the package to take a look at things locally, you can use:
+This package is a work-in-progress and many features are not yet implemented. The package is not yet on CRAN, but you can install it using:
 
-```
-devtools::install_github("mooreaw/scRyfall")
+```r
+devtools::install_github("ndrewwm/scRyfall")
 ```
 
-## Basic Use
+## Cards
 
 `search_cards()`
 
 - Parses valid Scryfall query syntax, and returns matching cards as a `tibble`.
 
-```
-> search_cards("c:U Mizz")
-# A tibble: 7 x 12
-  name   scryfall_id collector_number mana_cost set   set_name   cmc type 
-  <chr>  <chr>       <chr>            <chr>     <chr> <chr>    <dbl> <chr>
-1 Mizzi… 762d568d-a… 64               {2}{U}    ori   Magic O…     3 Crea…
-2 Mizzi… d9859344-4… 45               {U}       rtr   Return …     1 Inst…
-3 Mizzi… d0ea2c3a-c… 50               {2}{U}{R} c15   Command…     4 Lege…
-4 Niv-M… 1b1c4bed-9… 184              {2}{U}{U… c17   Command…     6 Lege…
-5 Niv-M… 6f3d2dc5-7… 192              {U}{U}{U… grn   Guilds …     6 Lege…
-6 Niv-M… 56a2609d-b… 208              {W}{U}{B… war   War of …     5 Lege…
-7 Niv-M… 395465b8-f… 225              {2}{U}{U… c20   Command…     6 Lege…
-# … with 4 more variables: rarity <chr>, text <chr>, colors <list>,
-#   color_identity <list>
+```r
+search_cards("c:U Mizz")
 ```
 
-`get_cards_by_name()`
+`get_card_by_name()`
 
-- Convenience function, in case you are just trying to find cards by name
-- Can search for multiple cards if passed a vector of card names
-
+```r
+get_card_by_name("Ajani's Pridemate")
 ```
-> get_card_by_name("Ajani's Pridemate")
-# A tibble: 1 x 12
-  name   scryfall_id collector_number mana_cost set   set_name   cmc type 
-  <chr>  <chr>       <chr>            <chr>     <chr> <chr>    <dbl> <chr>
-1 Ajani… b3656310-0… 4                {1}{W}    war   War of …     2 Crea…
-# … with 4 more variables: rarity <chr>, text <chr>, colors <list>,
-#   color_identity <list>
+
+`get_card_by_id()`
+
+```r
+get_card_by_id("e92c7477-d453-4fa4-acf4-3835ab9eb55a", "scryfall")
+```
+
+## Sets
+
+`get_set_by_code()`
+
+```r
+get_set_by_code("mid")
+```
+
+`get_set_by_id()`
+
+```r
+get_set_by_id()
+```
+
+`get_sets()`
+
+```r
+get_sets()
 ```

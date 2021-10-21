@@ -2,10 +2,15 @@
 % Please edit documentation in R/sets.R
 \name{get_set_by_id}
 \alias{get_set_by_id}
-\title{TODO}
+\title{Retrieve a set by an ID value.}
 \usage{
-get_set_by_id(id, type)
+get_set_by_id(id, type = c("scryfall"))
+}
+\arguments{
+\item{id}{the set's ID.}
+
+\item{type}{the type of ID to use in the search.}
 }
 \description{
-TODO
+Retrieve a set by an ID value.
 }

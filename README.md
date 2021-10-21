@@ -1,5 +1,6 @@
 # scRyfall
 
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![R-CMD-check](https://github.com/ndrewwm/scRyfall/workflows/R-CMD-check/badge.svg)](https://github.com/ndrewwm/scRyfall/actions)
 
 Scryfall is an R-wrapper for the *Scryfall* API.

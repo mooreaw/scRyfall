@@ -12,30 +12,37 @@
 #' @return A tibble containing card information.
 #'
 #' @importFrom attempt stop_if stop_if_not stop_if_any
+#' @importFrom attempt warn_if warn_if_not warn_if_any
 #' @import httr
 #' @import stringr
 #' @import purrr
+#' @import tidyr
+#' @import tibble
 #'
 #' @export
 get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {
   stop_if(name, is.null, msg = "A name must be supplied in order to request card data.")
-  stop_if_not(name, is.character, msg = "Please provide a string.")
+  stop_if_not(name, is.character, msg = "Names must be strings.")
 
-  name <- name %>%
+  warn_if(name, ~length(.) > 1, msg = "length(name) is greater than 1; only the first value will be used.")
+  warn_if(fuzzy, ~length(.) > 1, msg = "length(fuzzy) is greater than 1; only the first value will be used.")
+  warn_if(set, ~length(.) > 1, msg = "length(set) is greater than 1; only the first value will be used.")
+
+  name <- first(name) %>%
     str_remove_all("[[:punct:]]") %>%
     str_squish() %>%
     str_replace_all(" ", "+")
 
   base_url <- "https://api.scryfall.com/cards/named?"
 
-  if (fuzzy) {
+  if (first(fuzzy)) {
     url <- str_c(base_url, "fuzzy=", name)
   } else {
     url <- str_c(base_url, "exact=", name)
   }
 
-  if (!is.null(set)) {
-    url <- str_c(url, "&set=", set)
+  if (!is.null(first(set))) {
+    url <- str_c(url, "&set=", first(set))
   }
 
   Sys.sleep(1)
@@ -50,8 +57,9 @@ get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {
 
 #' Retrieve a card from the Scryfall API using the card's ID.
 #'
-#' @param id ID value(s) to search for.
+#' @param id ID value to search for.
 #' @param type Which ID type to use ("scryfall" (default), "mtgo", "arena", "collector", "multiverse").
+#' @param format Which format should be retrieved.
 #' @param face Which card face to return.
 #' @param version Which image version to return ("" (default), "small", "normal", "large").
 #' @param set Which set to request (Optional).
@@ -60,24 +68,18 @@ get_card_by_name <- function(name, fuzzy = FALSE, set = NULL) {
 #'
 #' @export
 get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, version = NULL, set = NULL) {
-
-  stop_if(id, is.null, msg = "An ID must be supplied in order to request card data.")
-  stop_if_any(type, ~!. %in% c("scryfall", "mtgo", "arena", "collector", "multiverse"), msg = "Please use a valid ID type ('scryfall', 'mtgo', 'arena', 'collector').")
-
-  if (length(id) > 1 & length(type) > 1 & length(type) != length(id)) {
-    stop("Please specify an individual ID type for each card, or use a single ID type.")
-  }
-
-  # stop_if_any(id, ~str_detect(., "[A-Z}|[a-z]|[[:punct:]]"), msg = "ID values must contain only numeric values.")
+  warn_if(lst(id, type, format, face, version, set), ~length(.) > 1, msg = "You're attempting to retrieve >1 cards; only the first value will be used.")
+  stop_if(first(id), is.null, msg = "An ID must be supplied in order to request card data.")
+  stop_if(first(type), ~!. %in% c("scryfall", "mtgo", "arena", "collector", "multiverse"), msg = "Please use a valid ID type ('scryfall', 'mtgo', 'arena', 'collector').")
 
   base_url <- "https://api.scryfall.com/cards/"
 
   url <- case_when(
-    type == "scryfall"   ~ str_c(base_url, "", id, "/"),
-    type == "mtgo"       ~ str_c(base_url, "mtgo/", id, "/"),
-    type == "arena"      ~ str_c(base_url, "arena/", id, "/"),
-    type == "multiverse" ~ str_c(base_url, "multiverse/", id, "/"),
-    TRUE                 ~ str_c(base_url, "collector/", id, "/")
+    first(type) == "scryfall"   ~ str_c(base_url, "", first(id), "/"),
+    first(type) == "mtgo"       ~ str_c(base_url, "mtgo/", first(id), "/"),
+    first(type) == "arena"      ~ str_c(base_url, "arena/", first(id), "/"),
+    first(type) == "multiverse" ~ str_c(base_url, "multiverse/", first(id), "/"),
+    TRUE                 ~ str_c(base_url, "collector/", first(id), "/")
   )
 
   Sys.sleep(1)
@@ -109,9 +111,9 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
 #'
 #' Further information on `unique`, from scryfall's documentation:
 #'
-#' > - *cards* (default) Removes duplicate gameplay objects (cards that share a name and have the same functionality). For example, if your search matches more than one print of Pacifism, only one copy of Pacifism will be returned.
-#' > - *art* Returns only one copy of each unique artwork for matching cards. For example, if your search matches more than one print of Pacifism, one card with each different illustration for Pacifism will be returned, but any cards that duplicate artwork already in the results will be omitted.
-#' > - *prints* Returns all prints for all cards matched (disables rollup). For example, if your search matches more than one print of Pacifism, all matching prints will be returned.
+#' - *cards* (default) Removes duplicate gameplay objects (cards that share a name and have the same functionality). For example, if your search matches more than one print of Pacifism, only one copy of Pacifism will be returned.
+#' - *art* Returns only one copy of each unique artwork for matching cards. For example, if your search matches more than one print of Pacifism, one card with each different illustration for Pacifism will be returned, but any cards that duplicate artwork already in the results will be omitted.
+#' - *prints* Returns all prints for all cards matched (disables rollup). For example, if your search matches more than one print of Pacifism, all matching prints will be returned.
 #'
 #' _**`order`**_
 #'
@@ -141,11 +143,9 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
 search_cards <- function(q, unique = "cards", order = "name", dir = "auto", include_extras = FALSE, page = 1) {
   base_url <- "https://api.scryfall.com/cards/search/"
 
-  qry <- utils::URLencode(q, reserved = TRUE)
-  url <- str_glue("{base_url}?order={order}&unique={unique}&dir={dir}&q={qry}")
-
   Sys.sleep(1)
-  req <- GET(url)
+  qry <- utils::URLencode(q, reserved = TRUE)
+  req <- GET(url = base_url, query = lst(q, unique, order, dir, include_extras, page))
 
   # TODO: this error message is unhelpful, come up with something better
   stop_if(status_code(req), ~. != 200, msg = "Bad request")

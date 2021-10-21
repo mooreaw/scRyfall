@@ -31,7 +31,12 @@ get_set_by_code <- function(code) {
   as_tibble(res)
 }
 
-#' TODO
-get_set_by_id <- function(id, type) {
+#' Retrieve a set by an ID value.
+#'
+#' @param id the set's ID.
+#' @param type the type of ID to use in the search.
+#'
+#' @export
+get_set_by_id <- function(id, type = c("scryfall")) {
   NULL
 }

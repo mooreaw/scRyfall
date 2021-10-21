@@ -18,6 +18,8 @@ get_card_by_id(
 
 \item{type}{Which ID type to use ("scryfall" (default), "mtgo", "arena", "collector", "multiverse").}
 
+\item{format}{Which format should be retrieved.}
+
 \item{face}{Which card face to return.}
 
 \item{version}{Which image version to return ("" (default), "small", "normal", "large").}

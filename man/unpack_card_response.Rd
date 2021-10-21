@@ -4,10 +4,10 @@
 \alias{unpack_card_response}
 \title{Return card API results as a data frame.}
 \usage{
-unpack_card_response(card_content)
+unpack_card_response(req)
 }
 \arguments{
-\item{card_content}{List of card information to be converted into a tibble.}
+\item{req}{Response object, containing a list of card information to be converted into a tibble.}
 }
 \value{
 A tibble with unpacked card information.

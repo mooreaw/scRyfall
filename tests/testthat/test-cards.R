@@ -7,7 +7,7 @@ test_that("All get_card_ functions return a tibble.", {
 })
 
 test_that("The search_cards() function should return a tibble.", {
-  expect_true(is_tibble(search_cards("!Negate")))
+  expect_true(is_tibble(search_cards("!negate")))
 })
 
 test_that("fuzzy = TRUE should give the same results as non fuzzy, assuming the same card", {
@@ -15,13 +15,12 @@ test_that("fuzzy = TRUE should give the same results as non fuzzy, assuming the 
   cc_name_2 <- get_card_by_name("Ajani's Pridemate")
 
   expect_equal(cc_name_1$name, cc_name_2$name)
-  expect_equal(cc_name_1$scryfall_id, cc_name_2$scryfall_id)
   expect_equal(cc_name_1$set_name, cc_name_2$set_name)
 })
 
 test_that("Searching for a frequently printed card, by name, should return at least 1 result.", {
   n1 <- get_card_by_name("Negate")
-  n2 <- search_cards("!Negate")
+  n2 <- search_cards("!negate")
 
   expect_gt(nrow(n1), 0)
   expect_gt(nrow(n2), 0)
@@ -60,8 +59,14 @@ test_that("Double-faced cards are handled sensibly.", {
   expect_equal(res1$name, res2$name)
 
   # it's a DFC, so we shouldn't have this column in the results-- it should be nested in card_faces
-  expect_null(res1$power)
+  expect_error(pull(res1, power))
 
   # the card_faces column shouldn't be empty
   expect_false(is.null(res1$card_faces))
+})
+
+test_that("Pagination should work correctly.", {
+  res <- search_cards("set:mid is:booster", unique = "art")
+
+  expect_equal(nrow(res), max(as.numeric(res$collector_number)))
 })

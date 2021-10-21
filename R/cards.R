@@ -149,11 +149,9 @@ get_card_by_id <- function(id, type = "scryfall", format = NULL, face = NULL, ve
 search_cards <- function(q, unique = "cards", order = "name", dir = "auto", include_extras = FALSE, page = 1) {
   base_url <- "https://api.scryfall.com/cards/search/"
 
-  qry <- utils::URLencode(q, reserved = TRUE)
-  url <- str_glue("{base_url}?order={order}&unique={unique}&dir={dir}&q={qry}")
-
   Sys.sleep(1)
-  req <- GET(url)
+  qry <- utils::URLencode(q, reserved = TRUE)
+  req <- GET(url = base_url, query = lst(q, unique, order, dir, include_extras, page))
 
   # TODO: this error message is unhelpful, come up with something better
   stop_if(status_code(req), ~. != 200, msg = "Bad request")

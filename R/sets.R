@@ -10,7 +10,9 @@ get_sets <- function() {
   req <- GET(base_url)
   res <- content(req)
 
-  as_tibble(res)
+  as_tibble(res) %>%
+    select(data) %>%
+    unnest_wider(data)
 }
 
 #' Get an individual set based on its 3-letter identifier

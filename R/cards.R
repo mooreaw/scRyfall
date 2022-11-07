@@ -179,6 +179,15 @@ search_cards <- function(q, unique = "cards", order = "name", dir = "auto", incl
   }
 }
 
+#' Return a random card.
+#' 
+#' @return A tibble with 1 card from the Scryfall API.
+get_random <- function() {
+  req <- GET("https://api.scryfall.com/cards/random")
+
+  unpack_card_response(req)
+}
+
 #' Return card API results as a data frame.
 #'
 #' @param req Response object, containing a list of card information to be converted into a tibble.

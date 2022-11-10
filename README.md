@@ -3,53 +3,109 @@
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![R-CMD-check](https://github.com/ndrewwm/scRyfall/workflows/R-CMD-check/badge.svg)](https://github.com/ndrewwm/scRyfall/actions)
 
-Scryfall is an R-wrapper for the *Scryfall* API.
+`scRyfall` is an R-wrapper for the *Scryfall* API, built with *tidy* principles (e.g. results are returned as `tibble`s).
 
-A link to Scryfall's API documentation [is here.](https://scryfall.com/docs/api)
+<!--
+[Scryfall's API documentation.](https://scryfall.com/docs/api)
 
-A link to Scryfall's syntax guide [is here.](https://scryfall.com/docs/syntax)
+[Scryfall's syntax guide.](https://scryfall.com/docs/syntax)
+-->
 
 ## Installation
 
-This package is very much a work-in-progress and many features are not implemented yet, but if you want to install the package to take a look at things locally, you can use:
+This package is a work-in-progress and many features are not yet implemented. The package is not yet on CRAN, but you can install it using:
 
-```
-devtools::install_github("mooreaw/scRyfall")
+```r
+devtools::install_github("ndrewwm/scRyfall")
 ```
 
-## Basic Use
+## Cards
 
 `search_cards()`
 
-- Parses valid Scryfall query syntax, and returns matching cards as a `tibble`.
+- Parses valid Scryfall [query syntax](https://scryfall.com/docs/syntax), and returns matching cards as a `tibble`.
 
+```r
+search_cards("c:U Mizz")
+#> # A tibble: 7 × 67
+#>   object id         oracle_id    multiverse_ids mtgo_id
+#>   <chr>  <chr>      <chr>        <list>           <int>
+#> 1 card   762d568d-… 48a909b6-e6… <list [1]>       57916
+#> 2 card   d9859344-… 02d998a6-0a… <list [1]>       46307
+#> 3 card   d0ea2c3a-… f787c6cf-a4… <list [1]>          NA
+#> 4 card   1b1c4bed-… 899d58dc-60… <list [1]>          NA
+#> 5 card   6f3d2dc5-… 33666a98-81… <list [1]>       69757
+#> 6 card   56a2609d-… 10764b35-5c… <list [1]>       72022
+#> 7 card   395465b8-… 959acb66-84… <list [1]>          NA
+#> # … with 62 more variables: mtgo_foil_id <int>,
+#> #   tcgplayer_id <int>, cardmarket_id <int>,
+#> #   name <chr>, lang <chr>, released_at <chr>,
+#> #   uri <chr>, scryfall_uri <chr>, layout <chr>,
+#> #   highres_image <lgl>, image_status <chr>,
+#> #   image_uris <list>, mana_cost <chr>, cmc <dbl>,
+#> #   type_line <chr>, oracle_text <chr>, power <chr>, …
 ```
-> search_cards("c:U Mizz")
-# A tibble: 7 x 12
-  name   scryfall_id collector_number mana_cost set   set_name   cmc type 
-  <chr>  <chr>       <chr>            <chr>     <chr> <chr>    <dbl> <chr>
-1 Mizzi… 762d568d-a… 64               {2}{U}    ori   Magic O…     3 Crea…
-2 Mizzi… d9859344-4… 45               {U}       rtr   Return …     1 Inst…
-3 Mizzi… d0ea2c3a-c… 50               {2}{U}{R} c15   Command…     4 Lege…
-4 Niv-M… 1b1c4bed-9… 184              {2}{U}{U… c17   Command…     6 Lege…
-5 Niv-M… 6f3d2dc5-7… 192              {U}{U}{U… grn   Guilds …     6 Lege…
-6 Niv-M… 56a2609d-b… 208              {W}{U}{B… war   War of …     5 Lege…
-7 Niv-M… 395465b8-f… 225              {2}{U}{U… c20   Command…     6 Lege…
-# … with 4 more variables: rarity <chr>, text <chr>, colors <list>,
-#   color_identity <list>
+
+`get_card_by_name()`
+
+```r
+get_card_by_name("Ajani's Pridemate")
+#> # A tibble: 1 × 63
+#>   object id         oracle_id    multiverse_ids mtgo_id
+#>   <chr>  <chr>      <chr>        <list>           <int>
+#> 1 card   b3656310-… 95e94dea-5a… <list [1]>       71614
+#> # … with 58 more variables: arena_id <int>,
+#> #   tcgplayer_id <int>, cardmarket_id <int>,
+#> #   name <chr>, lang <chr>, released_at <chr>,
+#> #   uri <chr>, scryfall_uri <chr>, layout <chr>,
+#> #   highres_image <lgl>, image_status <chr>,
+#> #   image_uris <list>, mana_cost <chr>, cmc <dbl>,
+#> #   type_line <chr>, oracle_text <chr>, power <chr>, …
 ```
 
-`get_cards_by_name()`
+`get_card_by_id()`
 
-- Convenience function, in case you are just trying to find cards by name
-- Can search for multiple cards if passed a vector of card names
-
+```r
+get_card_by_id("e92c7477-d453-4fa4-acf4-3835ab9eb55a", "scryfall")
+#> # A tibble: 1 × 61
+#>   object id         oracle_id    multiverse_ids mtgo_id
+#>   <chr>  <chr>      <chr>        <list>           <int>
+#> 1 card   e92c7477-… 3407fe41-fd… <list [1]>       83095
+#> # … with 56 more variables: arena_id <int>,
+#> #   tcgplayer_id <int>, cardmarket_id <int>,
+#> #   name <chr>, lang <chr>, released_at <chr>,
+#> #   uri <chr>, scryfall_uri <chr>, layout <chr>,
+#> #   highres_image <lgl>, image_status <chr>,
+#> #   image_uris <list>, mana_cost <chr>, cmc <dbl>,
+#> #   type_line <chr>, oracle_text <chr>, …
 ```
-> get_card_by_name("Ajani's Pridemate")
-# A tibble: 1 x 12
-  name   scryfall_id collector_number mana_cost set   set_name   cmc type 
-  <chr>  <chr>       <chr>            <chr>     <chr> <chr>    <dbl> <chr>
-1 Ajani… b3656310-0… 4                {1}{W}    war   War of …     2 Crea…
-# … with 4 more variables: rarity <chr>, text <chr>, colors <list>,
-#   color_identity <list>
+
+## Sets
+
+`get_set_by_code()`
+
+```r
+get_set_by_code("mid")
+#> # A tibble: 1 × 17
+#>   object id     code  mtgo_code arena_code tcgplayer_id
+#>   <chr>  <chr>  <chr> <chr>     <chr>             <int>
+#> 1 set    44b8e… mid   mid       mid                2864
+#> # … with 11 more variables: name <chr>, uri <chr>,
+#> #   scryfall_uri <chr>, search_uri <chr>,
+#> #   released_at <chr>, set_type <chr>,
+#> #   card_count <int>, digital <lgl>,
+#> #   nonfoil_only <lgl>, foil_only <lgl>,
+#> #   icon_svg_uri <chr>
+```
+
+`get_set_by_id()`
+
+```r
+get_set_by_id()
+```
+
+`get_sets()`
+
+```r
+get_sets()
 ```
